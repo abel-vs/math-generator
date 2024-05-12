@@ -3,6 +3,7 @@ from manim import *
 import os
 import base64
 from PIL import Image
+import logging
 
 from utils import *
 
@@ -34,7 +35,7 @@ self.wait()
 def add_indentation(string):
   indented_string = ""
   for line in string.splitlines():
-    indented_string += " " * 4 + line + "\n"
+    indented_string += " " * 8 + line + "\n"
   return indented_string
 
 code_response = st.text_area(label="Code generated: ",
@@ -65,10 +66,17 @@ if generates_code:
   with open("GenScene.py", "w") as f:
     f.write(code_file)
 
-  os.system("manim GenScene.py GenScene --format=mp4 --media_dir . --custom_folders video_dir")
+  result = os.system("manim GenScene.py GenScene --format=mp4 --media_dir . --custom_folders video_dir")
+  logging.info(f"Manim execution result: {result}")
 
-  video_file = open(os.path.dirname(__file__) + '/../../GenScene.mp4', 'rb')
-  video_bytes = video_file.read()
-  st.video(video_bytes)
+  # Check if the video file exists before trying to open it
+  video_path = os.path.dirname(__file__) + '/../../GenScene.mp4'
+  if os.path.exists(video_path):
+      with open(video_path, 'rb') as video_file:
+          video_bytes = video_file.read()
+          st.video(video_bytes)
+  else:
+      logging.error("Failed to find the video file. Please check the Manim output for errors.")
+    
   python_file = open(os.path.dirname(__file__) + '/../../GenScene.py', 'rb')
   st.download_button("Download scene in Python", python_file, "GenScene.py", "text/plain")

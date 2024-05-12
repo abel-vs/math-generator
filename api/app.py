@@ -8,11 +8,12 @@ from openai import OpenAI
 load_dotenv()
 app = Flask(__name__)
 
+print("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY"))
+
 
 @app.route("/")
 def hello_world():
     return "GM API"
-
 
 @app.route("/langgraph", methods=["POST"])
 def langgraph():

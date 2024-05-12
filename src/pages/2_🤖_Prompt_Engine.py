@@ -1,6 +1,13 @@
 import streamlit as st
 import os
-import openai
+from openai import OpenAI
+from dotenv import load_dotenv
+import logging
+
+load_dotenv()
+
+client = OpenAI()
+
 from PIL import Image
 
 from utils import *
@@ -17,7 +24,7 @@ prompt = st.text_area("Write your animation idea here. Use simple words.",
                       "Draw a blue circle and convert it to a red square")
 
 openai_api_key = st.text_input(
-    "Paste your own [Open API Key](https://platform.openai.com/account/api-keys)", value="", type="password")
+    "Paste your own [Open API Key](https://platform.openai.com/account/api-keys)", value=os.getenv("OPENAI_API_KEY") or "", type="password")
 
 openai_model = st.selectbox(
     "Select the GPT model. If you don't have access to GPT-4, select GPT-3.5-Turbo", ["GPT-3.5-Turbo", "GPT-4"])
@@ -33,18 +40,27 @@ if generate_prompt:
     st.error("Error: You need to provide a prompt.")
     st.stop()
 
-  response = openai.ChatCompletion.create(
-      model=openai_model.lower(),
-      messages=[
-          {"role": "system", "content": GPT_SYSTEM_INSTRUCTIONS},
-          {"role": "user", "content": wrap_prompt(prompt)}
-      ]
-  )
+  response = client.chat.completions.create(model=openai_model.lower(),
+  messages=[
+      {"role": "system", "content": GPT_SYSTEM_INSTRUCTIONS},
+      {"role": "user", "content": wrap_prompt(prompt)}
+  ])
+
+  content = response.choices[0].message.content
+  logging.debug(content)
 
   code_response = extract_code(response.choices[0].message.content)
+  logging.debug(code_response)
 
   code_response = extract_construct_code(code_response)
+  logging.debug(code_response)
 
-  st.text_area(label="Code generated: ",
+  code_response = remove_indentation(code_response)
+
+  st.text_area(label="Generate text: ",
+                value=content,
+                key="content")
+
+  st.text_area(label="Generate code: ",
                value=code_response,
                key="code_input")

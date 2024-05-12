@@ -9,7 +9,8 @@ python = ">=3.9.8,<3.11"
 manim = "^0.15.1"
 streamlit = "^1.14.0"
 protobuf = "^3.20.0"
-openai = "^0.27.2"
+openai = "^1.28.0"
+python-dotenv ="1.0.1"
 
 [tool.poetry.dev-dependencies]
 

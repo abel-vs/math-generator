@@ -19,7 +19,6 @@ styl = f"""
   textarea[aria-label="Code generated: "] {{
     font-family: 'Consolas', monospace !important;
   }}
-  }}
 </style>
 """
 st.markdown(styl, unsafe_allow_html=True)
@@ -28,7 +27,7 @@ st.title(":art: Generative Manim")
 st.write(":robot_face: Create beautiful and quick animations with GPT-4 and GPT-3.5 :sparkles:")
 
 prompt = st.text_area("Write your animation idea here. Use simple words.",
-                      "Draw a blue circle and convert it to a red square", max_chars=240,
+                      "Draw a blue circle and convert it to a red square", max_chars=400,
                       key="prompt_input")
 
 openai_api_key = ""
@@ -60,8 +59,8 @@ if generate_video:
     st.stop()
 
   # If prompt exceeds 240 characters, it will be truncated
-  if len(prompt) > 240 and not openai_api_key:
-    st.error("Error: Your prompt is longer than 240 characters. Please shorten it.")
+  if len(prompt) > 400 and not openai_api_key:
+    st.error("Error: Your prompt is longer than 400 characters. Please shorten it.")
     st.stop()
 
   # Prompt must be trimmed of spaces at the beginning and end

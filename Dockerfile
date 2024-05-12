@@ -1,4 +1,4 @@
-FROM python:3.8.0
+FROM python:3.9.8
 
 WORKDIR /app
 
@@ -17,4 +17,8 @@ RUN poetry install
 
 COPY src /app/src
 
-CMD ["poetry", "run", "streamlit", "run", "/app/src/Generator.py"]
+EXPOSE 8501
+
+RUN mkdir videos
+
+CMD ["poetry", "run", "streamlit", "run", "src/main.py"]

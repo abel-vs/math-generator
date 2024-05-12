@@ -39,6 +39,13 @@ def extract_construct_code(code_str: str) -> str:
   else:
     return ""
 
+def remove_indentation(code_response: str) -> str:
+  """
+    Fixes the indentation of the code
+  """
+  code_response = code_response.replace("\n        ", "\n")
+  return code_response
+
 def code_static_corrector(code_response: str) -> str:
   """
     Corrects some static errors in the code
